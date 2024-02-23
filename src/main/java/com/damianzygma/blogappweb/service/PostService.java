@@ -11,5 +11,6 @@ public interface PostService {
 
     PostDto findPostById(Long postId);
 
+    void updatePost(PostDto postDto);
 
 }
