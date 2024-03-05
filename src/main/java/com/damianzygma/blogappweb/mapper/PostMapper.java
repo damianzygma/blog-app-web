@@ -3,6 +3,8 @@ package com.damianzygma.blogappweb.mapper;
 import com.damianzygma.blogappweb.dto.PostDto;
 import com.damianzygma.blogappweb.entity.Post;
 
+import java.util.stream.Collectors;
+
 public class PostMapper {
 
     // map Post entity to PostDto
@@ -15,6 +17,9 @@ public class PostMapper {
                 .shortDescription(post.getShortDescription())
                 .createdOn(post.getCreatedOn())
                 .updatedOn(post.getUpdatedOn())
+                .comments(post.getComments().stream()
+                        .map((comment) -> CommentMapper.mapToCommentDto(comment))
+                                .collect(Collectors.toSet()))
                 .build();
     }
 
