@@ -8,4 +8,6 @@ public interface CommentService {
     void creatComment(String postUrl, CommentDto commentDto);
 
     List<CommentDto> findAllComments();
+
+    void deleteComment(Long commentId);
 }
