@@ -9,6 +9,9 @@ import com.damianzygma.blogappweb.repository.PostRepository;
 import com.damianzygma.blogappweb.service.CommentService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class CommentServiceImpl implements CommentService {
 
@@ -27,5 +30,13 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = CommentMapper.mapToComment(commentDto);
         comment.setPost(post);
         commentRepository.save(comment);
+    }
+
+    @Override
+    public List<CommentDto> findAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return comments.stream()
+                .map(comment -> CommentMapper.mapToCommentDto(comment))
+                .collect(Collectors.toList());
     }
 }
