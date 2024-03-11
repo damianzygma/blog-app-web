@@ -25,8 +25,8 @@ public class PostController {
 
 //    create handler method, GET request and return model and view
     @GetMapping("/admin/posts")
-    public String post(Model model){
-        List<PostDto> posts = postService.findAllPosts();
+    public String posts(Model model){
+        List<PostDto> posts = postService.findPostsByUser();
         model.addAttribute("posts", posts);
         return "/admin/posts";
     }
