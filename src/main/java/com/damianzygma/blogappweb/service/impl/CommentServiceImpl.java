@@ -3,10 +3,14 @@ package com.damianzygma.blogappweb.service.impl;
 import com.damianzygma.blogappweb.dto.CommentDto;
 import com.damianzygma.blogappweb.entity.Comment;
 import com.damianzygma.blogappweb.entity.Post;
+import com.damianzygma.blogappweb.entity.User;
 import com.damianzygma.blogappweb.mapper.CommentMapper;
+import com.damianzygma.blogappweb.mapper.PostMapper;
 import com.damianzygma.blogappweb.repository.CommentRepository;
 import com.damianzygma.blogappweb.repository.PostRepository;
+import com.damianzygma.blogappweb.repository.UserRepository;
 import com.damianzygma.blogappweb.service.CommentService;
+import com.damianzygma.blogappweb.util.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +22,15 @@ public class CommentServiceImpl implements CommentService {
     private CommentRepository commentRepository;
     private PostRepository postRepository;
 
-    public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
+    private UserRepository userRepository;
+
+    public CommentServiceImpl(CommentRepository commentRepository,
+                              PostRepository postRepository,
+                              UserRepository userRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
+
     }
 
     @Override
@@ -43,5 +53,16 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public void deleteComment(Long commentId) {
         commentRepository.deleteById(commentId);
+    }
+
+    @Override
+    public List<CommentDto> findCommentsByPost() {
+        String email = SecurityUtils.getCurrentUser().getUsername();
+        User createdBy = userRepository.findByEmail(email);
+        Long userId = createdBy.getId();
+        List<Comment> comments = commentRepository.findCommentsByPost(userId);
+        return comments.stream()
+                .map((comment -> CommentMapper.mapToCommentDto(comment)))
+                .collect(Collectors.toList());
     }
 }
