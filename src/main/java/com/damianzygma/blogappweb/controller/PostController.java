@@ -4,6 +4,8 @@ import com.damianzygma.blogappweb.dto.CommentDto;
 import com.damianzygma.blogappweb.dto.PostDto;
 import com.damianzygma.blogappweb.service.CommentService;
 import com.damianzygma.blogappweb.service.PostService;
+import com.damianzygma.blogappweb.util.ROLE;
+import com.damianzygma.blogappweb.util.SecurityUtils;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,7 +28,13 @@ public class PostController {
 //    create handler method, GET request and return model and view
     @GetMapping("/admin/posts")
     public String posts(Model model){
-        List<PostDto> posts = postService.findPostsByUser();
+        String role = SecurityUtils.getRole();
+        List<PostDto> posts = null;
+        if(ROLE.ROLE_ADMIN.name().equals(role)){
+            posts = postService.findAllPosts();
+        }else{
+            posts = postService.findPostsByUser();
+        }
         model.addAttribute("posts", posts);
         return "/admin/posts";
     }
@@ -34,7 +42,13 @@ public class PostController {
     // handler method to handle list comments request
     @GetMapping("/admin/posts/comments")
     public String postComments(Model model){
-        List<CommentDto> comments = commentService.findCommentsByPost();
+        String role = SecurityUtils.getRole();
+        List<CommentDto> comments = null;
+        if(ROLE.ROLE_ADMIN.name().equals(role)){
+            comments = commentService.findAllComments();
+        }else{
+            comments = commentService.findCommentsByPost();
+        }
         model.addAttribute("comments", comments);
         return "admin/comments";
     }
