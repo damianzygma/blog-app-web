@@ -15,7 +15,7 @@ Basic functionalities on the admin side:
 3. Guest user can logout form the blog app.
 4. Admin user can manage all Guest users blog posts and comments.
 
-# Technologies
+# Technologies and tools
 1. Java
 2. Maven
 3. Hibernate
